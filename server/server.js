@@ -1,20 +1,31 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
+const bodyParser = require('body-parser'); // Corrected import
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
-app.use(express.json());
+// Middleware setup
+app.use(morgan('dev'));
+app.use(bodyParser.json()); // Corrected usage
+app.use(cookieParser());
+app.use(cors());
 
+// Routes setup
 const petRoutes = require('./routes/petRoutes');
+const authRoutes = require('./routes/authRoutes');
+app.use('/api', petRoutes);
+app.use('/api', authRoutes);
+
+// Database connection
 const connectDB = require('./db');
-
-app.listen(3000,()=>{
-  console.log('Server is running on port 3000');
-})
-
-app.get('/',(req,res)=>{
-  res.send('hii!')
-})
-
-//routes middleware
-app.use(petRoutes);
-
 connectDB();
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+// Test route
+app.get('/', (req, res) => {
+  res.send('hii!');
+});

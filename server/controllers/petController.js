@@ -9,6 +9,15 @@ async function createPet(req, res) {
     }
 }
 
+async function getPets(req, res) {
+    try {
+        const pets = await Pet.find();
+        res.status(200).send(pets);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
+
 async function getPetById(req, res) {
     try {
         const pet = await Pet.findById(req.params.id);
