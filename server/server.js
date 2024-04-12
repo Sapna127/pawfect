@@ -1,31 +1,20 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-
 const app = express();
-dotenv.config();
 
-// Connect to MongoDB
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
+app.use(express.json());
 
+const petRoutes = require('./routes/petRoutes');
+const connectDB = require('./db');
 
-mongoose.connect(MONGO_URI).then(()=>{
-  console.log("Connected to MongoDB");
-  app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`));
-}).catch((err)=>console.log(err));
-
-const petsSchema = new mongoose.Schema({
-  category: String,
-  name: String,
-  age: Number,
-  color: String,
+app.listen(3000,()=>{
+  console.log('Server is running on port 3000');
 })
 
-const Pet = mongoose.model('pet', petsSchema);
-
-app.get('/pets', async (req, res)=>{
-  const pets = await Pet.find();
-  res.json(pets);
+app.get('/',(req,res)=>{
+  res.send('hii!')
 })
+
+//routes middleware
+app.use(petRoutes);
+
+connectDB();
