@@ -2,7 +2,14 @@ const Pet = require('../models/pet.model');
 
 async function createPet(req, res) {
     try {
-        const pet = await Pet.create(req.body);
+        const { name, userId } = req.body;
+        const pet = await Pet.create({ name });
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        user.pets.push(pet._id);
+        await user.save();
         res.status(201).send(pet);
     } catch (err) {
         res.status(500).send(err.message);
@@ -11,7 +18,7 @@ async function createPet(req, res) {
 
 async function getPets(req, res) {
     try {
-        const pets = await Pet.find();
+        const pets = await Pet.find().populate('owner', 'name email'); // Populate owner details
         res.status(200).send(pets);
     } catch (err) {
         res.status(500).send(err.message);

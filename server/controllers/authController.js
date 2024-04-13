@@ -35,7 +35,21 @@ function login  (req,res){
     });
 }
 
+async function getUserPets(req, res) {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findById(userId).populate('pets', 'name'); // Populate pet details
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).send(user.pets);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
+
 module.exports = {
     register,
-    login
+    login,
+    getUserPets
 };

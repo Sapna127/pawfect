@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
     role: {
         type: Number,
         default: 0
-    }
+    },
+    pets:[{type: mongoose.Schema.Types.ObjectId, ref: 'Pet'}]
 }, { timestamps: true });
 
 userSchema.virtual('password')

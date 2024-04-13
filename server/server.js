@@ -14,8 +14,8 @@ app.use(cors());
 // Routes setup
 const petRoutes = require('./routes/petRoutes');
 const authRoutes = require('./routes/authRoutes');
-app.use('/api', petRoutes);
-app.use('/api', authRoutes);
+app.use(petRoutes);
+app.use(authRoutes);
 
 // Database connection
 const connectDB = require('./db');
